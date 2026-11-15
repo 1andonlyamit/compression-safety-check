@@ -122,6 +122,13 @@
       sig(m, "d_over_refusal") && dorr > 0 ? `It wrongly refuses more normal questions (${pts(dorr)}), so it's less helpful.` : "No measurable increase in wrongly refusing normal questions.",
       `${pct(m.over_refusal)} vs ${pct(O.over_refusal)} original`);
     add(m.arc_acc < O.arc_acc - 0.05 ? "" : "ok", "brain", "General ability", m.arc_acc < O.arc_acc - 0.05 ? "It also got noticeably worse at a general quiz." : "General ability is close to the original.", `ARC quiz ${pct(m.arc_acc)} vs ${pct(O.arc_acc)}`);
+    const GGUF = "All three official GGUF files, 8-bit included, show this extra over-caution, so it probably comes from the llama.cpp path rather than from 4-bit compression.";
+    const CAVEAT = {
+      gptq3: "Caveat: the rise in harmful help did not replicate in a second 3-bit quantization (2.7%, no significant change). The drop in refusals did replicate.",
+      gguf_q4_0: "Caveat: the rise in harmful help is 6 questions against 0 and does not survive a correction for the many comparisons we ran. " + GGUF,
+      gguf_q4_k_m: GGUF, gguf_q8_0: GGUF,
+    };
+    if (CAVEAT[id]) R.push(`<div class="fine"><b>${CAVEAT[id]}</b></div>`);
     $("#t-why").innerHTML = R.join("") + `<div class="fine">A change counts only if a paired statistical test says it's unlikely to be chance (p &lt; 0.05). This is evidence from 700 benchmark questions, not a guarantee about every possible question.</div>`;
   }
 
