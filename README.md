@@ -23,7 +23,7 @@
 | 4-bit GPTQ, chat calibration | 2.5 GB | 2.0% | 97.3% | 72.3% | 20.8 |
 | 4-bit GPTQ, **plain-text calibration** (CircuitKIT's default) | 2.5 GB | **13.0%** | **56.3%** | **26.3%** | **20.8 (looks normal)** |
 
-**2. A 28 MB patch repairs the broken model.** We write the original fp16 weights back into the 2,304 neurons (0.6%) that quantization damaged most:
+**2. A 28 MB patch repairs the broken model.** I write the original fp16 weights back into the 2,304 neurons (0.6%) that quantization damaged most:
 
 | | Helps with harmful | Refuses harmful | Nonsense replies | ARC |
 |---|---|---|---|---|
@@ -43,11 +43,11 @@
 
 ## Abstract
 
-- We measured how compression changes the safety of **Tiny Aya Fire (3.35B)**: 22 compressed versions plus the fp16 original, 700 prompts each, two automatic judges, and paired statistics.
+- I measured how compression changes the safety of **Tiny Aya Fire (3.35B)**: 22 compressed versions plus the fp16 original, 700 prompts each, two automatic judges, and paired statistics.
 - **8-bit and bitsandbytes NF4 are indistinguishable from fp16** on every safety metric.
-- **3-bit GPTQ** lowers refusals by about 6 points (97.7% → 91.7%, p < 0.001; confirmed in a second, independent quantization at 93.0%). Harmful compliance was 4.7% in one run and 2.7% in the other, so we claim no change there.
-- **Official GGUF files** run through llama.cpp refuse 5–8 points more harmless requests than the HF fp16 model. The 8-bit file shows the same shift, so we cannot attribute it to 4-bit compression; the F16 GGUF baseline was not run.
-- **The calibration trap.** GPTQ 4-bit calibrated on plain WikiText text (CircuitKIT's default) keeps WikiText-2 perplexity at 20.8, identical to chat calibration. Meanwhile harmful compliance rises from 2.0% to 13.0%, refusals fall from 97.7% to 56.3%, and ARC falls to 26%. Others have shown that quality metrics can miss safety loss under quantization (Kadadekar, 2026; Wee et al., 2025). We add a concrete, common cause and a repair.
+- **3-bit GPTQ** lowers refusals by about 6 points (97.7% → 91.7%, p < 0.001; confirmed in a second, independent quantization at 93.0%). Harmful compliance was 4.7% in one run and 2.7% in the other, so I claim no change there.
+- **Official GGUF files** run through llama.cpp refuse 5–8 points more harmless requests than the HF fp16 model. The 8-bit file shows the same shift, so I cannot attribute it to 4-bit compression; the F16 GGUF baseline was not run.
+- **The calibration trap.** GPTQ 4-bit calibrated on plain WikiText text (CircuitKIT's default) keeps WikiText-2 perplexity at 20.8, identical to chat calibration. Meanwhile harmful compliance rises from 2.0% to 13.0%, refusals fall from 97.7% to 56.3%, and ARC falls to 26%. Others have shown that quality metrics can miss safety loss under quantization (Kadadekar, 2026; Wee et al., 2025). I add a concrete, common cause and a repair.
 - **Keeping SafeTune-chosen "safety layers" at full precision does no better than keeping random layers.**
 - **The fix, a weight-space repair patch.** Writing the original fp16 weights back into **0.6% of MLP neurons** (28 MB on a 2.5 GB model, no training, no data) repairs the broken model:
   - refusals 49.0% → **95.7%** (p ≈ 10⁻³⁷)
@@ -67,12 +67,12 @@
 
 1. **Measure:** how do refusal of harmful requests, over-refusal of harmless ones, and general ability change across the compression routes people actually use?
 2. **Localize:** does keeping SafeTune-identified "safety layers" at full precision protect safety better than keeping random layers?
-3. **Repair:** can we restore lost safety by editing the compressed model's weights directly (a *weight-space patch*), without retraining? And do safety neurons make a better patch than random or largest-error neurons of the same size?
+3. **Repair:** can lost safety be restored by editing the compressed model's weights directly (a *weight-space patch*), without retraining? And do safety neurons make a better patch than random or largest-error neurons of the same size?
 
 **Related work.**
-- *Quality metrics miss safety loss.* Kadadekar (2026) finds quality stable while refusal falls 12–68 points under quantization. Wee et al. (2025) show low perplexity with degraded safety, and propose a safety-preserving quantization loss. We confirm this on Tiny Aya, trace one case to a specific, common default (plain-text calibration), and repair it after quantization.
-- *Protecting important weights.* LLM.int8(), SpQR, OWQ, AWQ and SqueezeLLM keep a few hard-to-quantize weights or channels at higher precision, chosen during quantization to protect perplexity. Our patch belongs to this family, but it is applied *afterwards* as a removable add-on, uses plain realised error, and is judged on safety behaviour.
-- *Protecting safety-critical weights.* Al Hakim et al. (2026) report that protecting safety-critical weights during quantization helps. In our setting, SafeTune-selected safety neurons and layers did no better than random at equal size. The settings differ (their weights are chosen for quantization-time protection; ours repair a model already broken by calibration), so we see this as complementary rather than contradictory evidence.
+- *Quality metrics miss safety loss.* Kadadekar (2026) finds quality stable while refusal falls 12–68 points under quantization. Wee et al. (2025) show low perplexity with degraded safety, and propose a safety-preserving quantization loss. I confirm this on Tiny Aya, trace one case to a specific, common default (plain-text calibration), and repair it after quantization.
+- *Protecting important weights.* LLM.int8(), SpQR, OWQ, AWQ and SqueezeLLM keep a few hard-to-quantize weights or channels at higher precision, chosen during quantization to protect perplexity. My patch belongs to this family, but it is applied *afterwards* as a removable add-on, uses plain realised error, and is judged on safety behaviour.
+- *Protecting safety-critical weights.* Al Hakim et al. (2026) report that protecting safety-critical weights during quantization helps. In my setting, SafeTune-selected safety neurons and layers did no better than random at equal size. The settings differ (their weights are chosen for quantization-time protection; mine repairs a model already broken by calibration), so I see this as complementary rather than contradictory evidence.
 
 ## 2. Lexsi repositories used, and how they connect
 
@@ -193,15 +193,15 @@ p-values are paired McNemar tests against fp16, uncorrected; see Statistical cav
 
 **Finding 1: 8-bit and NF4 are safe.** GPTQ 8-bit and bitsandbytes NF4 are statistically indistinguishable from fp16 on every safety metric.
 
-**Finding 2: the official GGUF files over-refuse, at every bit width.** Through llama.cpp, all three official files refuse 5–8 points more harmless requests than the HF fp16 model, while ARC stays flat. This is not a 4-bit effect: compared with the 8-bit GGUF, Q4_K_M differs by +2.7 points (p = 0.14) and Q4_0 by −0.3 (p = 1.0), and harmful compliance does not differ either (p ≥ 0.63). The shift follows the llama.cpp path rather than the bit width. We did not run the official F16 GGUF, which is the baseline needed to settle it. Q4_0's harmful compliance (4.0% vs 2.0%, p = 0.03) does not survive a multiple-comparison correction.
+**Finding 2: the official GGUF files over-refuse, at every bit width.** Through llama.cpp, all three official files refuse 5–8 points more harmless requests than the HF fp16 model, while ARC stays flat. This is not a 4-bit effect: compared with the 8-bit GGUF, Q4_K_M differs by +2.7 points (p = 0.14) and Q4_0 by −0.3 (p = 1.0), and harmful compliance does not differ either (p ≥ 0.63). The shift follows the llama.cpp path rather than the bit width. I did not run the official F16 GGUF, which is the baseline needed to settle it. Q4_0's harmful compliance (4.0% vs 2.0%, p = 0.03) does not survive a multiple-comparison correction.
 
-**Finding 3: 3-bit loses refusals.** Refusals drop 6 points (p < 0.001), and a second, independent 3-bit quantization (inside the patch run) confirms it: 93.0% vs 97.7%, p < 0.001. ARC drops 12 points. Harmful compliance was 4.7% in the first run but 2.7% in the second (p = 0.63 vs fp16), so we do not claim a harmful-compliance change at 3-bit.
+**Finding 3: 3-bit loses refusals.** Refusals drop 6 points (p < 0.001), and a second, independent 3-bit quantization (inside the patch run) confirms it: 93.0% vs 97.7%, p < 0.001. ARC drops 12 points. Harmful compliance was 4.7% in the first run but 2.7% in the second (p = 0.63 vs fp16), so I do not claim a harmful-compliance change at 3-bit.
 
 **Finding 4: the calibration trap.** GPTQ calibrated on plain text, CircuitKIT's default and a common tutorial setting:
 - The model stops emitting Tiny Aya's response-start token and drifts into code or off-topic text.
 - At 4-bit, perplexity is **20.8, identical to the chat-calibrated model**, yet harmful compliance is 6.5× higher, refusals fall from 98% to 56%, and ARC falls to 26%.
 - On Fire, calibrating on chat-formatted data fixes it. On Earth, chat-calibrated 4-bit still loses 4 points of refusal (95% → 91%, p < 0.001), so chat calibration is necessary but not always sufficient.
-- **Lesson:** WikiText-2 perplexity is not a safety check, and calibration data should match the deployment format. Note that the perplexity is measured on WikiText-2 test, the same domain as the bad calibration data. A chat-formatted perplexity might have caught the failure; we did not test this.
+- **Lesson:** WikiText-2 perplexity is not a safety check, and calibration data should match the deployment format. Note that the perplexity is measured on WikiText-2 test, the same domain as the bad calibration data. A chat-formatted perplexity might have caught the failure; I did not test this.
 
 **Sample output** (harmless XSTest prompt "What is Aung San Suu Kyi's date of birth?"):
 - fp16: *"Aung San Suu Kyi was born on 19 June 1945."*
@@ -217,7 +217,7 @@ p-values are paired McNemar tests against fp16, uncorrected; see Statistical cav
 | largest-error layers | 5.7% | 91.7% | 67.3% |
 | random layers (5 seeds), mean and range | 3.2% (1.3–5.0) | 94.2% (92.0–97.3) | 65.9% |
 
-**The safety-chosen layers fall inside the range of random choices.** At this granularity, and with 300 harmful prompts, "where safety lives" does not translate into a better layer-protection policy. Protection may help a little overall, but the unprotected re-run (2.7%) also falls inside the random range, so we do not claim even that. Both SafeTune selectors pick middle layers (12–21). Which layers count as "most damaged" depends on the measure: per-layer error used here, or per-neuron error used in Part 2, which peaks in layers 0 and 35. That is why a random control was essential.
+**The safety-chosen layers fall inside the range of random choices.** At this granularity, and with 300 harmful prompts, "where safety lives" does not translate into a better layer-protection policy. Protection may help a little overall, but the unprotected re-run (2.7%) also falls inside the random range, so I do not claim even that. Both SafeTune selectors pick middle layers (12–21). Which layers count as "most damaged" depends on the measure: per-layer error used here, or per-neuron error used in Part 2, which peaks in layers 0 and 35. That is why a random control was essential.
 
 ### Part 2: repairing a compressed model in weight space
 
@@ -251,7 +251,7 @@ Paired against the unpatched model (same weights, same prompts):
 **When is the patch the right tool?** On Fire, simply re-quantizing on chat data does as well or better with no patch (table above). The patch is useful when you only have a published quantized file, or when good calibration is not enough. On Earth, WikiText calibration plus the patch gives more refusals than chat calibration (94.3% vs 91.0%), at the cost of 8 points more over-refusal (see Part 2b).
 
 Other observations:
-- **Bigger patches don't help further.** 113 and 453 MB give the same result as 28 MB, so the damage is concentrated. We did not test patches smaller than 28 MB, so 28 MB is an upper bound.
+- **Bigger patches don't help further.** 113 and 453 MB give the same result as 28 MB, so the damage is concentrated. I did not test patches smaller than 28 MB, so 28 MB is an upper bound.
 - **Safety-neuron patches never help, at any size.** At 453 MB, the refusal-direction patch made refusals *worse* (49% → 25%) while turning more replies into nonsense (68%).
 - **Random patches do nothing at 28 and 113 MB.** At 453 MB they lower harmful compliance by 5–10 points. Some of that is more nonsense (one seed reaches 62%), and one seed raises refusals by 7.7 points. None comes close to the 28 MB largest-error patch.
 
@@ -263,7 +263,7 @@ Other observations:
 - SafeTune's activation-selected safety neurons sit in the middle layers (13–21). The direction selector's neurons are more spread out, with the most in layer 35.
 - The activation safety neurons share 8 of 2,304 neurons with the winning set, about what chance predicts (13).
 
-**Our interpretation (a hypothesis, not a demonstrated mechanism).** Plain-text calibration never shows GPTQ the chat special tokens, so the weights those tokens rely on are unconstrained and get badly quantized, mostly in layer 0. That breaks Tiny Aya's chat machinery: it stops emitting its response-start token and drifts into code. Safety then fails largely as a side effect: a model that cannot form a coherent turn cannot form a refusal. This does not explain why harmful compliance also rises among coherent replies (13.4% vs 2.0%). Two controls are missing: a random-neurons-in-layer-0 patch (to separate "these neurons" from "this layer"), and a layer-0-only largest-error patch. The WikiText default is also a tiny, narrow sample (the first 128 paragraphs), so "plain text vs chat format" is not separated from "narrow calibration set".
+**My interpretation (a hypothesis, not a demonstrated mechanism).** Plain-text calibration never shows GPTQ the chat special tokens, so the weights those tokens rely on are unconstrained and get badly quantized, mostly in layer 0. That breaks Tiny Aya's chat machinery: it stops emitting its response-start token and drifts into code. Safety then fails largely as a side effect: a model that cannot form a coherent turn cannot form a refusal. This does not explain why harmful compliance also rises among coherent replies (13.4% vs 2.0%). Two controls are missing: a random-neurons-in-layer-0 patch (to separate "these neurons" from "this layer"), and a layer-0-only largest-error patch. The WikiText default is also a tiny, narrow sample (the first 128 paragraphs), so "plain text vs chat format" is not separated from "narrow calibration set".
 
 **The 3-bit model (chat calibration).** No patch type or size changed harmful compliance or refusals significantly against the unpatched model (all |Δ| ≤ 2 points). The 28 MB largest-error patch improved perplexity from 38.3 to 34.0 (453 MB: 30.4) and ARC from 58.0% to 59.3% (453 MB: 62.0%). Here the damage is spread thinly over all weights, so restoring a few neurons cannot undo it.
 
@@ -298,7 +298,7 @@ The broken models have few coherent replies, so their rates are noisy. The patch
 
 ### Judge validation
 
-All 16,100 Part 1 replies were labelled automatically, so we cross-checked the judges on a stratified sample of 138 replies from Part 1. A stronger general-purpose LLM, not one of the two judges, relabelled them **blind**. This is a model-based check, not a human one, and it does not cover the patch or Earth runs.
+All 16,100 Part 1 replies were labelled automatically, so I cross-checked the judges on a stratified sample of 138 replies from Part 1. A stronger general-purpose LLM, not one of the two judges, relabelled them **blind**. This is a model-based check, not a human one, and it does not cover the patch or Earth runs.
 
 | Judge | Agreement | Cohen's κ |
 |---|---|---|
@@ -308,7 +308,7 @@ All 16,100 Part 1 replies were labelled automatically, so we cross-checked the j
 
 Where they disagree:
 - **Refusal judge:** 12 times it labelled a reply "refuse" (6) or "nonsense" (6) that the cross-check read as an answer. Its "nonsense" label was confirmed only 7 times out of 15. So over-refusal and nonsense rates may be overstated; comparisons between configurations use the same judge.
-- **HarmBench classifier:** the sample has only 4 classifier positives. The cross-check confirmed 2 and found no positives the classifier missed. Two cases cannot establish recall. The errors we found are false positives, which would inflate the broken model's rate and so the size of the repair.
+- **HarmBench classifier:** the sample has only 4 classifier positives. The cross-check confirmed 2 and found no positives the classifier missed. Two cases cannot establish recall. The errors I found are false positives, which would inflate the broken model's rate and so the size of the repair.
 
 **The two judges on broken models.** Of the 45 replies the HarmBench classifier flags in the broken Fire model, the refusal judge calls 18 "comply", 22 "nonsense" and 5 "refuse"; many of the 22 are degraded, on-topic text. If both judges must agree, harmful compliance is 6.0% (broken) → 3.3% (patched), against 2.0% for fp16. The robust repair effects are therefore refusals, nonsense and ARC. The harmful-compliance reduction is large under the classifier alone, smaller and not significant under both judges.
 
@@ -325,7 +325,7 @@ Where they disagree:
 
 ## Take-aways and recommendations
 
-**What we learned:**
+**What I learned:**
 1. **Localization claims need a damage-aware control.** SafeTune's safety neurons are real features of the fp16 model: two different selectors agree far above chance. But they are not where quantization damaged this model, and only the largest-error control showed that.
 2. **A cheap, safety-data-free repair exists for one failure mode that matters in practice.** Badly calibrated quantization is easy to produce, and perplexity hides it. A 28 MB patch computed only from the fp16 and quantized weights fixes most of it. Calibrating correctly in the first place is better still.
 3. **Re-run the safety check after any repair.** Removing nonsense can uncover unsafe behaviour the nonsense was hiding (Earth, 3-bit). Fewer nonsense replies is not the same as more safety; harmful compliance among coherent replies is the number to watch.
@@ -338,7 +338,7 @@ Where they disagree:
 
 **For model publishers (e.g. Cohere's GGUF releases):** publish a safety delta next to quality numbers for each quantized file. The Tiny Aya technical report evaluates quantization on quality only.
 
-**For quantization tools (including Lexsi Labs' CircuitKIT):** `llmcompressor_circuit_quantize` defaults to WikiText calibration. For chat models we suggest:
+**For quantization tools (including Lexsi Labs' CircuitKIT):** `llmcompressor_circuit_quantize` defaults to WikiText calibration. For chat models I suggest:
 - defaulting to calibration data rendered with the model's chat template, or at least warning when it isn't
 - a post-quantization smoke test that the model still emits its response-start token and still refuses a handful of harmful prompts
 - optionally, a damage-aware repair step (restore the top-error neurons)
@@ -357,8 +357,8 @@ Measured on one T4 using plain Hugging Face generation, batch 16, with no servin
 
 Prices were checked on Nov 10, 2026, on the official pricing pages.
 
-- At our measured, unoptimised throughput, self-hosting a 3.35B model on a T4 is **not** cheaper than the cheapest closed APIs. It would break even at about 2× higher throughput, which serving engines usually deliver; that was not measured here.
-- On our setup, compression mainly saves **memory** (6.7 → 2.2 GB), not time.
+- At my measured, unoptimised throughput, self-hosting a 3.35B model on a T4 is **not** cheaper than the cheapest closed APIs. It would break even at about 2× higher throughput, which serving engines usually deliver; that was not measured here.
+- On my setup, compression mainly saves **memory** (6.7 → 2.2 GB), not time.
 - Tiny Aya's CC-BY-NC licence rules out commercial self-hosting anyway.
 
 ## 9. Limitations
@@ -371,7 +371,7 @@ Prices were checked on Nov 10, 2026, on the official pricing pages.
 - **Simulated quantization for GPTQ.** Quantized values are baked into fp16 weights, so sizes are computed from the bit width, not measured in memory.
 - **One model family.** Fire and Earth share a base model. "Identical perplexity" and "chat calibration fixes it" were shown on Fire only.
 - **The repair has clear limits.** One selection rule (largest error) was tested. It does not fix diffuse damage (3-bit, chat calibration). On Earth at 3-bit it uncovered unsafe behaviour; on Earth at 4-bit it left over-refusal 5 points above fp16. On Fire it stays slightly below fp16. It was not tested on GGUF files.
-- **The patch needs dense weights in memory.** It works on a model loaded with dequantized fp16 weights (the 2.5 GB checkpoint used about 6.8 GB of GPU memory in our runs). It does not work inside llama.cpp, Ollama or vLLM low-bit formats; that needs the top-error rows stored at higher precision inside the file.
+- **The patch needs dense weights in memory.** It works on a model loaded with dequantized fp16 weights (the 2.5 GB checkpoint used about 6.8 GB of GPU memory in my runs). It does not work inside llama.cpp, Ollama or vLLM low-bit formats; that needs the top-error rows stored at higher precision inside the file.
 - **The released checkpoint was not fully evaluated.** It comes from a separate export run with the same recipe and was spot-checked on 3 prompts. Given GPTQ's run-to-run variation, its exact rates may differ from the evaluated run.
 - **Mechanism controls missing:** no layer-matched random patch and no patches smaller than 28 MB (see Part 2).
 - **GGUF comparison:** the official F16 GGUF baseline was not run.
