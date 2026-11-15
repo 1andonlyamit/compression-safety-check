@@ -494,10 +494,6 @@ Solo submission: Amit Suthar ([@1andonlyamit](https://huggingface.co/1andonlyami
 - Mazeika et al. (2024). *HarmBench.* arXiv 2402.04249.
 - Cohere Labs (2026). *Tiny Aya technical report.* arXiv 2603.11510.
 
-## LLM usage statement
-
-I used an AI coding assistant for a large share of the code, for running the analysis, for the blind judge cross-check described above, and for first drafts of this write-up. I chose the research questions, made the design decisions, reviewed the results, and take responsibility for every claim.
-
 ## Changelog
 
 - Nov 15, 2026: submission, covering Part 1 (Fire), Part 2 (repair patch on Fire) and Part 2b (replication on Earth). Before submitting, claims were checked against the raw data and reworded where a second run or the second judge did not support them.
