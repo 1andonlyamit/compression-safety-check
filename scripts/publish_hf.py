@@ -11,9 +11,9 @@ import sys
 from huggingface_hub import HfApi
 
 USER = "1andonlyamit"
-SPACE = f"{USER}/compressed-tiny-aya-safety"
+SPACE = f"{USER}/compression-safety-check"
 MODEL = f"{USER}/tiny-aya-fire-gptq-w4-wikitextcalib"
-DATASET = f"{USER}/compressed-tiny-aya-safety-results"
+DATASET = f"{USER}/compression-safety-check-results"
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
 STAGING = os.path.join(ROOT, "publish", "staging")
 SPACE_DIR = os.path.join(ROOT, "repo", "webapp")  # static HTML/JS app (free to host)
@@ -35,11 +35,11 @@ def upload(private=True):
     # The hackathon asks for two public, un-gated collections: one for models, one for data.
     colls = {}
     for key, title, desc, items in [
-        ("models", "Compressed Tiny Aya: models and repair patch",
+        ("models", "Compression Safety Check: models and repair patch",
          "Lexsi AI Safety Hackathon (Track 2b): a broken 4-bit Tiny Aya Fire, its 28 MB weight-space "
          "repair patch, and the interactive Compression Safety Check.",
          [(MODEL, "model"), (SPACE, "space")]),
-        ("data", "Compressed Tiny Aya: safety evaluation data",
+        ("data", "Compression Safety Check: safety evaluation data",
          "Lexsi AI Safety Hackathon (Track 2b): judged replies, summaries, neuron scores, patches and "
          "run logs for compressed Tiny Aya Fire and Earth.",
          [(DATASET, "dataset")]),
@@ -63,7 +63,7 @@ def make_public():
         api.update_repo_settings(rid, repo_type=kind, private=False)
         print("public:", rid)
     for c in api.list_collections(owner=USER, limit=50):
-        if c.title.startswith("Compressed Tiny Aya"):
+        if c.title.startswith(("Compression Safety Check", "Compressed Tiny Aya")):
             api.update_collection_metadata(c.slug, private=False)
             print("public: collection", c.slug)
 

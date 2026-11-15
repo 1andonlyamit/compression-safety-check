@@ -12,7 +12,7 @@ models:
   - CohereLabs/tiny-aya-fire
   - 1andonlyamit/tiny-aya-fire-gptq-w4-wikitextcalib
 datasets:
-  - 1andonlyamit/compressed-tiny-aya-safety-results
+  - 1andonlyamit/compression-safety-check-results
 tags:
   - safety
   - quantization

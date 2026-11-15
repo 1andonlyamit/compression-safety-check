@@ -285,7 +285,7 @@
     <h2>What this is</h2><p>An entry to the Lexsi Labs AI Safety and Alignment Hackathon (Track 2b, AI Safety and Correction). It measures how compression changes the safety of Cohere Labs' <b>Tiny Aya Fire</b>, and repairs a broken compressed model by editing its weights directly. It is built with Lexsi Labs' <b>SafeTune</b>, <b>CircuitKIT</b> and <b>AuditKIT</b>.</p>
     <h2>Links</h2><ul>
       <li>Model and 28 MB repair patch: <a href="https://huggingface.co/1andonlyamit/tiny-aya-fire-gptq-w4-wikitextcalib" target="_blank">1andonlyamit/tiny-aya-fire-gptq-w4-wikitextcalib</a></li>
-      <li>All results, judged answers and code: <a href="https://huggingface.co/datasets/1andonlyamit/compressed-tiny-aya-safety-results" target="_blank">compressed-tiny-aya-safety-results</a></li></ul>
+      <li>All results, judged answers and code: <a href="https://huggingface.co/datasets/1andonlyamit/compression-safety-check-results" target="_blank">compression-safety-check-results</a></li></ul>
     <h2>Limitations</h2><ul><li>One model family, English only, 300 harmful questions (about ±2-point resolution).</li>
       <li>Answers are judged automatically; the judges were cross-checked by another model, not by humans.</li>
       <li>The repair was tested on two damaged versions. It doesn't fix damage spread evenly (3-bit) and wasn't tested inside GGUF files.</li>
