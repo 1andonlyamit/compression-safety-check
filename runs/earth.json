@@ -1,0 +1,12 @@
+{
+ "out": "/kaggle/working/out",
+ "judge": true,
+ "gen_hours": 7.0,
+ "model_source": "cohere-labs/tiny-aya/transformers/earth/1",
+ "configs": [
+  {"name": "fp16", "kind": "fp16"},
+  {"name": "gptq4", "kind": "gptq", "bits": 4},
+  {"name": "gptq4_wikitext", "kind": "patchset", "bits": 4, "calib": "wikitext", "budgets": [64], "random_seeds": 3},
+  {"name": "gptq3_wikitext", "kind": "patchset", "bits": 3, "calib": "wikitext", "budgets": [64], "random_seeds": 3}
+ ]
+}

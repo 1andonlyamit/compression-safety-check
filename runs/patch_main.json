@@ -1,0 +1,9 @@
+{
+ "out": "/kaggle/working/out",
+ "judge": true,
+ "gen_hours": 7.0,
+ "configs": [
+  {"name": "gptq3", "kind": "patchset", "bits": 3, "budgets": [64, 256, 1024], "random_seeds": 3},
+  {"name": "gptq4_wikitext", "kind": "patchset", "bits": 4, "calib": "wikitext", "budgets": [64, 256, 1024], "random_seeds": 3}
+ ]
+}

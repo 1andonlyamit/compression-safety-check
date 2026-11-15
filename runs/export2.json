@@ -1,0 +1,9 @@
+{
+ "out": "/kaggle/working/out",
+ "judge": false,
+ "gen_hours": 2.0,
+ "configs": [
+  {"name": "export_gptq4_wikitext", "kind": "export", "bits": 4, "calib": "wikitext",
+   "repo_name": "tiny-aya-fire-gptq-w4-wikitextcalib", "patch_per_layer": 64}
+ ]
+}

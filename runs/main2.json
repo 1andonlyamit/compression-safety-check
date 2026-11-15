@@ -1,0 +1,140 @@
+{
+ "out": "/kaggle/working/out",
+ "judge": true,
+ "gen_hours": 8.0,
+ "configs": [
+  {
+   "name": "select",
+   "kind": "select"
+  },
+  {
+   "name": "fp16",
+   "kind": "fp16"
+  },
+  {
+   "name": "gptq8",
+   "kind": "gptq",
+   "bits": 8
+  },
+  {
+   "name": "gptq4",
+   "kind": "gptq",
+   "bits": 4
+  },
+  {
+   "name": "gptq3",
+   "kind": "gptq",
+   "bits": 3
+  },
+  {
+   "name": "bnb_nf4",
+   "kind": "bnb4"
+  },
+  {
+   "name": "gptq4_wikitext",
+   "kind": "gptq",
+   "bits": 4,
+   "calib": "wikitext"
+  },
+  {
+   "name": "gptq3_wikitext",
+   "kind": "gptq",
+   "bits": 3,
+   "calib": "wikitext"
+  },
+  {
+   "name": "gguf_q8_0",
+   "kind": "gguf",
+   "file": "tiny-aya-fire-q8_0.gguf"
+  },
+  {
+   "name": "gguf_q4_k_m",
+   "kind": "gguf",
+   "file": "tiny-aya-fire-q4_k_m.gguf"
+  },
+  {
+   "name": "gguf_q4_0",
+   "kind": "gguf",
+   "file": "tiny-aya-fire-q4_0.gguf"
+  },
+  {
+   "name": "gptq3_protect_safety_act",
+   "kind": "gptq",
+   "bits": 3,
+   "protect_from": "safety_act"
+  },
+  {
+   "name": "gptq3_protect_safety_dir",
+   "kind": "gptq",
+   "bits": 3,
+   "protect_from": "safety_dir"
+  },
+  {
+   "name": "gptq3_protect_quant_error",
+   "kind": "gptq",
+   "bits": 3,
+   "protect_from": "quant_error"
+  },
+  {
+   "name": "gptq3_protect_random_0",
+   "kind": "gptq",
+   "bits": 3,
+   "protect_from": "random_0"
+  },
+  {
+   "name": "gptq3_protect_random_1",
+   "kind": "gptq",
+   "bits": 3,
+   "protect_from": "random_1"
+  },
+  {
+   "name": "gptq3_protect_random_2",
+   "kind": "gptq",
+   "bits": 3,
+   "protect_from": "random_2"
+  },
+  {
+   "name": "gptq3_protect_random_3",
+   "kind": "gptq",
+   "bits": 3,
+   "protect_from": "random_3"
+  },
+  {
+   "name": "gptq3_protect_random_4",
+   "kind": "gptq",
+   "bits": 3,
+   "protect_from": "random_4"
+  },
+  {
+   "name": "gptq4_protect_safety_act",
+   "kind": "gptq",
+   "bits": 4,
+   "protect_from": "safety_act"
+  },
+  {
+   "name": "gptq4_protect_safety_dir",
+   "kind": "gptq",
+   "bits": 4,
+   "protect_from": "safety_dir"
+  },
+  {
+   "name": "gptq4_protect_random_0",
+   "kind": "gptq",
+   "bits": 4,
+   "protect_from": "random_0"
+  },
+  {
+   "name": "gptq4_protect_random_1",
+   "kind": "gptq",
+   "bits": 4,
+   "protect_from": "random_1"
+  },
+  {
+   "name": "gptq4_protect_random_2",
+   "kind": "gptq",
+   "bits": 4,
+   "protect_from": "random_2"
+  }
+ ],
+ "resume": true
+}
