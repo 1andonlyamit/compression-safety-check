@@ -44,7 +44,7 @@
       <p class="lead">A simple way to see if a <b>compressed</b> AI model still refuses harmful requests, <em>before you ship it</em>.</p>
     </div>
     <svg class="glass" viewBox="0 0 120 120" aria-hidden="true"><circle cx="48" cy="48" r="30" fill="none" stroke="#6b5a3a" stroke-width="5"/><circle cx="48" cy="48" r="24" fill="#fffaf0" opacity=".55"/><path d="M70 70l30 30" stroke="#6b5a3a" stroke-width="10" stroke-linecap="round"/><path d="M28 12l-4-8M14 22l-8-4M40 8l2-8" stroke="#C18A3A" stroke-width="2.5" stroke-linecap="round"/></svg>
-    <div class="sticky"><div class="tape"></div><div class="hand">Our finding</div>
+    <div class="sticky"><div class="tape"></div><div class="hand">My finding</div>
       <p>A common way of shrinking the model quietly broke its safety. Restoring <b>0.6%</b> of its weights fixed it.</p></div>
   </header>
 
@@ -76,7 +76,7 @@
 
       <div class="panel right">
         <div class="tabs">
-          <button class="t on" data-t="why">Why we flagged it</button>
+          <button class="t on" data-t="why">Why I flagged it</button>
           <button class="t" data-t="how">How it works</button>
           <button class="t" data-t="next">What to do next</button>
         </div>
@@ -166,19 +166,19 @@
       <div class="panel">
         <div class="ptab green">Why it broke</div>
         <ol class="steps">
-          <li><h3>What we observed</h3><p>Shrunk with plain encyclopedia text as its calibration examples, the 4-bit model
+          <li><h3>What I observed</h3><p>Shrunk with plain encyclopedia text as its calibration examples, the 4-bit model
             stopped behaving like a chat assistant: <b>43%</b> of its replies to harmful questions were nonsense, often lines of
             Python code. Refusals fell from 98% to 49%, yet the standard quality score (perplexity) looked normal.</p></li>
           <li><h3>What the evidence suggests</h3><p>Rounding is shared across groups of 128 weights. A neuron with a few
             extreme values gets rounded far more coarsely than its neighbours. A small set of neurons, mostly in the
             <b>first and last layers</b>, was damaged far more than the rest. Restoring exactly those repaired the model;
             restoring “safety neurons” or random ones did not.</p></li>
-          <li><h3>Our interpretation</h3><p>The damage broke the model's <em>general conversational machinery</em>. A model
+          <li><h3>My interpretation</h3><p>The damage broke the model's <em>general conversational machinery</em>. A model
             that can't form a proper reply can't form a refusal either, so safety failed as a side effect.</p></li>
         </ol>
-        <div class="note warn"><b>What we can and can't claim</b>This is what the experiments support, not a proof of
+        <div class="note warn"><b>What I can and can't claim</b>This is what the experiments support, not a proof of
           mechanism: one model family, two damaged versions, 700 questions. The repair result is strong (refusals 49% → 96%,
-          p &lt; 10<sup>-37</sup>), but “broken conversational machinery” is our interpretation. We did not trace the exact circuit.</div>
+          p &lt; 10<sup>-37</sup>), but “broken conversational machinery” is my interpretation. I did not trace the exact circuit.</div>
       </div>
       <div class="panel right">
         <div class="tabs"><button class="t on">Try it: round real Tiny Aya weights</button></div>

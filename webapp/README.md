@@ -22,7 +22,7 @@ tags:
 
 # Compression Safety Check · Tiny Aya
 
-An interactive tool from our Lexsi AI Safety and Alignment Hackathon project (Track 2b).
+An interactive tool from my Lexsi AI Safety and Alignment Hackathon project (Track 2b).
 
 - **Check a version:** pick a compressed version of Tiny Aya Fire and a test question. You see its real recorded answer, a safety grade from A to F, the reasons behind the grade, and what to do next.
 - **Repair:** flip a switch to apply a 28 MB weight-space patch to a badly compressed model. The broken answer becomes a proper one, and you can see where in the model the patch edits.
