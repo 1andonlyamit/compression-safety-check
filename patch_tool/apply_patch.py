@@ -32,6 +32,12 @@ def apply_patch(model, path):
         mlp.gate_proj.weight[ix] = patch[f"layer{l}.gate_proj"].to(dev, dtype)
         mlp.up_proj.weight[ix] = patch[f"layer{l}.up_proj"].to(dev, dtype)
         mlp.down_proj.weight[:, ix] = patch[f"layer{l}.down_proj"].to(dev, dtype)
+        # If compressed-tensors still quantizes weights on the fly, it would round the
+        # restored rows again. The loaded weights are already dequantized, so turning that
+        # off changes nothing else (the evaluation pipeline did the same).
+        for proj in (mlp.gate_proj, mlp.up_proj, mlp.down_proj):
+            if hasattr(proj, "quantization_enabled"):
+                proj.quantization_enabled = False
     return undo
 
 
