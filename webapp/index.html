@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compression Safety Check · Tiny Aya</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,650;1,9..144,400&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<aside class="side">
+  <div class="brand">
+    <svg class="leaf" viewBox="0 0 64 64" aria-hidden="true"><path d="M12 52C12 30 26 14 52 12c-2 24-18 40-40 40Z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 52 40 24M22 42h10M28 36h8M18 46l1-9M25 39l1-9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    <div class="name">Compression<br>Safety Check</div>
+  </div>
+  <p class="tag">Find out whether a shrunk AI model still says <em>no</em>, and repair it if it doesn't.</p>
+  <hr>
+  <nav>
+    <a data-view="check" class="on"><svg viewBox="0 0 24 24"><path d="M4 11 12 4l8 7v9H4z" /></svg>Check a version</a>
+    <a data-view="repair"><svg viewBox="0 0 24 24"><path d="M14 4a4 4 0 0 0-5 5L4 14l2 4 4 2 5-5a4 4 0 0 0 5-5l-3 3-3-1-1-3z"/></svg>Repair</a>
+    <a data-view="experiments"><svg viewBox="0 0 24 24"><path d="M9 3h6M10 3v6L5 19a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2L14 9V3"/></svg>Experiments</a>
+    <a data-view="insights"><svg viewBox="0 0 24 24"><path d="M5 20V12M10 20V7M15 20v-6M20 20V4"/></svg>Insights</a>
+    <a data-view="method"><svg viewBox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5zM3 13l9 5 9-5"/></svg>Method</a>
+    <a data-view="about"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>About</a>
+  </nav>
+  <svg class="ginkgo" viewBox="0 0 200 260" aria-hidden="true">
+    <g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+      <path d="M30 255C60 200 80 160 120 110"/>
+      <path d="M120 110c-30-10-40-40-30-60 25 5 45 25 50 55-8 2-14 4-20 5Z"/><path d="M120 110 98 62M120 110l-6-52M120 110l10-50"/>
+      <path d="M78 175c-30 0-48-22-46-44 24-6 46 6 58 30-4 6-8 10-12 14Z"/><path d="M78 175 44 140M78 175l-24-42"/>
+      <path d="M95 150c10-26 36-38 58-30-2 24-22 40-50 40-3-4-6-7-8-10Z"/><path d="M95 150l46-25M95 150l52-12"/>
+      <path d="M55 215c-26-6-38-30-32-50 22 0 40 16 44 40-4 4-8 7-12 10Z"/>
+    </g>
+  </svg>
+</aside>
+
+<main>
+  <header class="top">
+    <div>
+      <div class="kicker">Lexsi AI Safety Hackathon · Tiny Aya Fire · evidence notebook</div>
+      <h1>Compression Safety Check</h1>
+      <p class="lead">A simple way to see if a <b>compressed</b> AI model still refuses harmful requests, <em>before you ship it</em>.</p>
+    </div>
+    <svg class="glass" viewBox="0 0 120 120" aria-hidden="true"><circle cx="48" cy="48" r="30" fill="none" stroke="#6b5a3a" stroke-width="5"/><circle cx="48" cy="48" r="24" fill="#fffaf0" opacity=".55"/><path d="M70 70l30 30" stroke="#6b5a3a" stroke-width="10" stroke-linecap="round"/><path d="M28 12l-4-8M14 22l-8-4M40 8l2-8" stroke="#C18A3A" stroke-width="2.5" stroke-linecap="round"/></svg>
+    <div class="sticky"><div class="tape"></div><div class="hand">Our finding</div>
+      <p>A common way of shrinking the model quietly broke its safety. Restoring <b>0.6%</b> of its weights fixed it.</p></div>
+  </header>
+
+  <!-- ============ CHECK ============ -->
+  <section id="view-check" class="view on">
+    <div class="grid2">
+      <div class="panel">
+        <div class="ptab ochre">Ask &amp; Check</div>
+        <div class="field">
+          <div class="flabel"><span class="num">1</span>Which version do you use?</div>
+          <select id="ver"></select>
+          <div id="verChips" class="chips"></div>
+        </div>
+        <div class="field">
+          <div class="flabel"><span class="num">2</span>Ask it a test question</div>
+          <div class="qbox"><svg viewBox="0 0 24 24" class="qi"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.8.3-1 .9-1 1.7M12 16.5v.5"/></svg>
+            <select id="q"></select></div>
+          <div class="row"><button id="shuffle" class="ghost">Another question</button>
+            <span id="qkind" class="pill"></span></div>
+        </div>
+        <button id="go" class="primary">Check this version <span>→</span></button>
+        <div class="arrow">↓</div>
+        <div class="answer" id="answer">
+          <div class="ahead"><svg viewBox="0 0 24 24"><path d="M7 3h7l5 5v13H7zM14 3v5h5M10 13h6M10 17h6"/></svg>Its answer</div>
+          <div id="atext" class="atext muted">Choose a version and a question, then press <b>Check</b>.</div>
+        </div>
+        <div id="banner"></div>
+      </div>
+
+      <div class="panel right">
+        <div class="tabs">
+          <button class="t on" data-t="why">Why we flagged it</button>
+          <button class="t" data-t="how">How it works</button>
+          <button class="t" data-t="next">What to do next</button>
+        </div>
+        <div class="tbody" id="t-why"></div>
+        <div class="tbody hidden" id="t-how"></div>
+        <div class="tbody hidden" id="t-next"></div>
+        <div class="closer">
+          <h3><em>A closer look</em></h3>
+          <div class="grid2 tight">
+            <div><div class="mini">How it answered the 300 harmful questions</div><div id="stack"></div>
+              <p class="cap">Original model on top, this version below.</p></div>
+            <div><div class="mini">Safety vs size</div><div id="scatter"></div>
+              <p class="cap">Each dot is a version; yours is circled. Lower is safer.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ REPAIR ============ -->
+  <section id="view-repair" class="view">
+    <div class="grid2">
+      <div class="panel">
+        <div class="ptab green">Repair a broken model</div>
+        <p class="body">This is the badly compressed 4-bit model (grade <b class="terra">F</b>). Turn on the
+          <b>28 MB patch</b> to write the original numbers back into its 2,304 most-damaged neurons.</p>
+        <div class="field"><div class="flabel"><span class="num">1</span>Pick a test question</div>
+          <select id="rq"></select></div>
+        <div class="field"><div class="flabel"><span class="num">2</span>Which neurons should the patch restore?</div>
+          <div class="seg" id="rmethod">
+            <button data-m="largest_error" class="on">Most-damaged</button>
+            <button data-m="safety_act">“Safety neurons”</button>
+            <button data-m="random_0">Random</button></div></div>
+        <label class="switch"><input type="checkbox" id="patchOn"><span class="slider"></span>
+          <span class="slab">Apply the 28 MB patch</span></label>
+        <div class="answer" id="ranswer"><div class="ahead" id="rhead">Broken model</div><div id="rtext" class="atext"></div></div>
+        <div id="rbanner"></div>
+      </div>
+      <div class="panel right">
+        <div class="tabs"><button class="t on">What the patch changes</button></div>
+        <div class="tbody" id="rmetrics"></div>
+        <div class="closer">
+          <h3><em>Where the patch edits the model</em></h3>
+          <div id="strip"></div>
+          <p class="cap">36 layers, from where text enters (left) to where words come out (right). Darker means more
+            neurons restored. The most-damaged neurons sit at the <b>edges</b>; the “safety neurons” sit in the
+            <b>middle</b>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EXPERIMENTS ============ -->
+  <section id="view-experiments" class="view">
+    <div class="panel wide"><div class="ptab green">Experiments</div><div id="exp" class="cardsgrid"></div></div>
+  </section>
+
+  <!-- ============ INSIGHTS ============ -->
+  <section id="view-insights" class="view">
+    <div class="panel wide"><div class="ptab green">Insights</div>
+      <h2>Every version at a glance</h2><div id="gradeTable"></div>
+      <h2>Patch size: does a bigger patch help more?</h2>
+      <div class="seg" id="psize"><button data-s="64" class="on">28 MB · 64 neurons/layer</button>
+        <button data-s="256">113 MB · 256</button><button data-s="1024">453 MB · 1,024</button></div>
+      <div id="pbars"></div>
+      <h2>Second model: does the repair replicate on Tiny Aya Earth?</h2>
+      <div class="table-wrap"><table class="gt earth">
+        <thead><tr><th>Tiny Aya Earth</th><th>Helps with harmful</th><th>Refuses harmful</th><th>Nonsense</th><th>Quiz (ARC)</th></tr></thead>
+        <tbody>
+          <tr><td>Original (16-bit)</td><td>2.7%</td><td>95.0%</td><td>0.3%</td><td>75.3%</td></tr>
+          <tr><td>4-bit, plain-text calibration</td><td>7.0%</td><td>30.0%</td><td>66.0%</td><td>24.7%</td></tr>
+          <tr><td><b>+ 28 MB repair patch</b></td><td><b>3.7%</b></td><td><b>94.3%</b></td><td><b>1.3%</b></td><td><b>75.3%</b></td></tr>
+          <tr><td>3-bit, plain-text calibration</td><td>5.7%</td><td>17.0%</td><td>80.7%</td><td>22.0%</td></tr>
+          <tr><td>+ 28 MB repair patch</td><td class="bad"><b>14.0%</b></td><td>80.0%</td><td>11.3%</td><td>56.0%</td></tr>
+        </tbody></table></div>
+      <div class="note warn"><b>Nonsense is not safety</b>At 4-bit the repair works on Earth too. At 3-bit it brings the
+        conversation back but harmful help rises from 5.7% to 14%: the nonsense was hiding unsafe behaviour. Always re-run
+        the safety check after any repair.</div>
+      <h2>Full results</h2><img src="patch_curves.png" class="fig" alt="Patch curves">
+      <img src="headline_harmful_compliance.png" class="fig half" alt="Safety vs size">
+    </div>
+  </section>
+
+  <!-- ============ METHOD ============ -->
+  <section id="view-method" class="view">
+    <div class="grid2">
+      <div class="panel">
+        <div class="ptab green">Why it broke</div>
+        <ol class="steps">
+          <li><h3>What we observed</h3><p>Shrunk with plain encyclopedia text as its calibration examples, the 4-bit model
+            stopped behaving like a chat assistant: <b>43%</b> of its replies to harmful questions were nonsense, often lines of
+            Python code. Refusals fell from 98% to 49%, yet the standard quality score (perplexity) looked normal.</p></li>
+          <li><h3>What the evidence suggests</h3><p>Rounding is shared across groups of 128 weights. A neuron with a few
+            extreme values gets rounded far more coarsely than its neighbours. A small set of neurons, mostly in the
+            <b>first and last layers</b>, was damaged far more than the rest. Restoring exactly those repaired the model;
+            restoring “safety neurons” or random ones did not.</p></li>
+          <li><h3>Our interpretation</h3><p>The damage broke the model's <em>general conversational machinery</em>. A model
+            that can't form a proper reply can't form a refusal either, so safety failed as a side effect.</p></li>
+        </ol>
+        <div class="note warn"><b>What we can and can't claim</b>This is what the experiments support, not a proof of
+          mechanism: one model family, two damaged versions, 700 questions. The repair result is strong (refusals 49% → 96%,
+          p &lt; 10<sup>-37</sup>), but “broken conversational machinery” is our interpretation. We did not trace the exact circuit.</div>
+      </div>
+      <div class="panel right">
+        <div class="tabs"><button class="t on">Try it: round real Tiny Aya weights</button></div>
+        <div class="tbody">
+          <div class="field"><div class="flabel">Neuron</div><select id="tn"></select></div>
+          <div class="field"><div class="flabel">Bits kept per weight</div>
+            <div class="seg" id="tbits"><button data-b="8">8</button><button data-b="4" class="on">4</button>
+              <button data-b="3">3</button><button data-b="2">2</button></div></div>
+          <div id="toyStats"></div><div id="toyPlot"></div>
+          <p class="cap">Black: the real weights. Coloured: after rounding. A simplified illustration with plain rounding;
+            the study used GPTQ, which compensates better but suffers from the same effect.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ABOUT ============ -->
+  <section id="view-about" class="view">
+    <div class="panel wide"><div class="ptab green">About</div><div id="about"></div></div>
+  </section>
+</main>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
