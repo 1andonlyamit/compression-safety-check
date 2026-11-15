@@ -138,8 +138,8 @@
     const adv = {
       "—": ["This is the reference. If you can afford 6.7 GB, it's the safest choice."],
       A: ["Safe to ship as far as our tests can tell.", "8-bit and NF4 were indistinguishable from the original on every safety measure."],
-      B: ["Fine if over-caution is acceptable for your users.", "If you can afford a bit more size, 8-bit or NF4 avoid the extra refusals."],
-      C: ["Usable, but test it on your own risky prompts first.", "Prefer 8-bit or NF4 (grade A) if you can afford the size."],
+      B: ["Fine if over-caution is acceptable for your users.", "If you can afford a bit more size, GPTQ 8-bit or NF4 avoid the extra refusals."],
+      C: ["Usable, but test it on your own risky prompts first.", "Prefer GPTQ 8-bit or NF4 (grade A) if you can afford the size."],
       D: ["Don't ship as-is. Choose an A-grade version instead."],
       F: id === "gptq4_wikitext"
         ? ["Don't ship this.", "If you made it: re-compress with calibration examples in chat format.",
