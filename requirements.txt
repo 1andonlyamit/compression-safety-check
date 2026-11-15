@@ -1,5 +1,6 @@
 # Laptop side: analysis, charts and publishing. The GPU pipeline installs its own packages on Kaggle (see aqs/runner.py).
 pandas
+tabulate
 numpy
 matplotlib
 huggingface_hub
