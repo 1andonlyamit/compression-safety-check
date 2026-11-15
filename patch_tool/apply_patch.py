@@ -36,7 +36,7 @@ def apply_patch(model, path):
         # restored rows again. The loaded weights are already dequantized, so turning that
         # off changes nothing else (the evaluation pipeline did the same).
         for proj in (mlp.gate_proj, mlp.up_proj, mlp.down_proj):
-            if hasattr(proj, "quantization_enabled"):
+            if getattr(proj, "quantization_scheme", None) is not None or hasattr(proj, "quantization_enabled"):
                 proj.quantization_enabled = False
     return undo
 
