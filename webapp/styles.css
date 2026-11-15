@@ -4,7 +4,8 @@
   --serif:'Fraunces',Georgia,serif; --sans:'Inter',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
 }
 *{box-sizing:border-box}
-html,body{margin:0;height:100%}
+html{margin:0;height:100%}
+body{margin:0;min-height:100%}
 body{font-family:var(--sans);color:var(--ink);background:var(--paper);
   background-image:radial-gradient(#e9e1cf 0.6px,transparent 0.6px);background-size:14px 14px;display:flex}
 em{font-style:italic}
