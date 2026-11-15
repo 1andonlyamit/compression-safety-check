@@ -1,0 +1,11 @@
+# Laptop side: analysis, charts and publishing. The GPU pipeline installs its own packages on Kaggle (see aqs/runner.py).
+pandas
+numpy
+matplotlib
+huggingface_hub
+kaggle
+# Applying the repair patch (patch_tool/apply_patch.py)
+torch
+transformers
+safetensors
+compressed-tensors
